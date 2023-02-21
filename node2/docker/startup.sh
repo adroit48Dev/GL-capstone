@@ -1,0 +1,3 @@
+#!/bin/sh
+
+geth --networkid 14328 --datadir /app/data --bootnodes enode://e2ffc9cd19f7cee42b82d3fc2aa7bb49f7d55ff80c12a75d6eb2a98cfbe0047cd3f4f1b4e8d245ce028dabc651d3194fa0ad8568409d68b74eac502e49fada77@127.0.0.1:30301 --ipcdisable --syncmode "full" --http --allow-insecure-unlock --http.addr "0.0.0.0" --http.api "eth,web3,net,admin,personal" --http.corsdomain "*" --unlock "0xd76b0cc2a020ddcb33e434de494b5e63fb5f4e2c" --password /app/password/password.txt --mine

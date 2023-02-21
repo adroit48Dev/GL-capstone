@@ -1,0 +1,3 @@
+#!/bin/sh
+
+geth --networkid 14328 --datadir ./data --bootnodes enode://e2ffc9cd19f7cee42b82d3fc2aa7bb49f7d55ff80c12a75d6eb2a98cfbe0047cd3f4f1b4e8d245ce028dabc651d3194fa0ad8568409d68b74eac502e49fada77@127.0.0.1:0?discport=30301 --port 30303 --ipcdisable --syncmode 'full' --http --allow-insecure-unlock –http.corsdomain “*” --http.port 8545 --unlock '0x006aC4B8e8D99521b810FC867d572F8Cd3a5F3bF' --password /tmp/password.txt --mine

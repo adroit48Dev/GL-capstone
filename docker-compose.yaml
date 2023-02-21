@@ -1,0 +1,72 @@
+version: "3.7"
+
+services:
+  geth-bootnode:
+    hostname: geth-bootnode
+    image: geth-client
+    build:
+      context: .
+    volumes:
+      - ./keystore:/root/.ethereum/devchain/keystore:rw
+      - ./password:/root/files/password:ro
+    command: --datadir="/root/.ethereum/devchain"
+      --nodekeyhex="c2f0df82b3fa0d5ae122cc00ec42cfe751186f4931a7d6cee54647c53d176b06"
+      --nodiscover
+      --networkid=14328
+      --netrestrict="172.16.254.0/28"
+    ports:
+      - "30303:30303/udp"
+      - "30303:30303/tcp"
+    networks:
+      priv-eth-net:
+
+  geth-rpc-endpoint:
+    hostname: geth-rpc-endpoint
+    image: geth-client
+    depends_on:
+      - geth-bootnode
+    volumes:
+      - ./keystore:/root/.ethereum/devchain/keystore:rw
+      - ./password:/root/files/password:ro
+    command: --datadir="/root/.ethereum/devchain"
+      --bootnodes="enode://e2ffc9cd19f7cee42b82d3fc2aa7bb49f7d55ff80c12a75d6eb2a98cfbe0047cd3f4f1b4e8d245ce028dabc651d3194fa0ad8568409d68b74eac502e49fada77@geth-bootnode:30303"
+      --syncmode="full"
+      --allow-insecure-unlock
+      --http
+      --http.addr="0.0.0.0"
+      --http.api="eth,web3,net,admin,personal"
+      --http.corsdomain="*"
+      --networkid=14328
+      --netrestrict="172.16.254.0/28"
+    ports:
+      - "8545:8545"
+    networks:
+      priv-eth-net:
+
+  geth-miner:
+    hostname: geth-miner
+    image: geth-client
+    depends_on:
+      - geth-bootnode
+    volumes:
+      - ./keystore:/root/.ethereum/devchain/keystore:rw
+      - ./password:/root/files/password:ro
+    command: --datadir="/root/.ethereum/devchain"
+      --bootnodes="enode://e2ffc9cd19f7cee42b82d3fc2aa7bb49f7d55ff80c12a75d6eb2a98cfbe0047cd3f4f1b4e8d245ce028dabc651d3194fa0ad8568409d68b74eac502e49fada77@geth-bootnode:30303"
+      --mine
+      --miner.etherbase="006aC4B8e8D99521b810FC867d572F8Cd3a5F3bF"
+      --miner.threads=1
+      --networkid=14328
+      --netrestrict="172.16.254.0/28"
+      --verbosity=5
+      --unlock="0x006aC4B8e8D99521b810FC867d572F8Cd3a5F3bF"
+      --password="/root/files/password/password.txt"
+    networks:
+      priv-eth-net:
+
+networks:
+  priv-eth-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.254.0/28
